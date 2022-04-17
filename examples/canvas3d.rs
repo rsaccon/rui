@@ -1,8 +1,6 @@
-use rui::{
-    vertices::{Vertex, Vertices},
-    *,
-};
+use rui::*;
 use tao::keyboard::ModifiersState;
+use vger::canvas3d::vertices::{Vertex, Vertices};
 
 struct AppState {
     // mesh: Vertices,

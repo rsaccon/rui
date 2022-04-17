@@ -26,5 +26,4 @@ accesskit = "0.3.0"
 lazy_static = "1.4.0"
 
 vger = { path = "../vger-rs" } # TEMPORAY
-bytemuck = { version="1.8.0", features = [ "derive" ]}
 

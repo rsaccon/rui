@@ -1,9 +1,5 @@
 use crate::*;
-
-use self::vertices::{Vertex, Vertices};
-
-pub mod vertices;
-
+use vger::canvas3d::vertices::{Vertex, Vertices};
 /// Struct for `canvas3d`
 pub struct Canvas3d<F> {
     mesh: Vertices,
