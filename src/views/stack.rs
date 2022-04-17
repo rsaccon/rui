@@ -1,14 +1,5 @@
 use crate::*;
 
-/// Allows rui to iterate over a tuple of `Views`.
-pub trait ViewTuple {
-    fn foreach_view<F: FnMut(&dyn View)>(&self, f: &mut F);
-    fn len(&self) -> usize;
-    fn is_empty(&self) -> bool {
-        false
-    } // satisfy clippy
-}
-
 pub enum StackOrientation {
     Horizontal,
     Vertical,
@@ -220,110 +211,6 @@ impl<VT: ViewTuple> Stack<VT> {
 }
 
 impl<VT> private::Sealed for Stack<VT> {}
-
-impl<A: View> ViewTuple for (A,) {
-    fn foreach_view<FN: FnMut(&dyn View)>(&self, f: &mut FN) {
-        f(&self.0);
-    }
-    fn len(&self) -> usize {
-        1
-    }
-}
-
-impl<A: View, B: View> ViewTuple for (A, B) {
-    fn foreach_view<FN: FnMut(&dyn View)>(&self, f: &mut FN) {
-        f(&self.0);
-        f(&self.1);
-    }
-    fn len(&self) -> usize {
-        2
-    }
-}
-
-impl<A: View, B: View, C: View> ViewTuple for (A, B, C) {
-    fn foreach_view<FN: FnMut(&dyn View)>(&self, f: &mut FN) {
-        f(&self.0);
-        f(&self.1);
-        f(&self.2);
-    }
-    fn len(&self) -> usize {
-        3
-    }
-}
-
-impl<A: View, B: View, C: View, D: View> ViewTuple for (A, B, C, D) {
-    fn foreach_view<FN: FnMut(&dyn View)>(&self, f: &mut FN) {
-        f(&self.0);
-        f(&self.1);
-        f(&self.2);
-        f(&self.3);
-    }
-    fn len(&self) -> usize {
-        4
-    }
-}
-
-impl<A: View, B: View, C: View, D: View, E: View> ViewTuple for (A, B, C, D, E) {
-    fn foreach_view<FN: FnMut(&dyn View)>(&self, f: &mut FN) {
-        f(&self.0);
-        f(&self.1);
-        f(&self.2);
-        f(&self.3);
-        f(&self.4);
-    }
-    fn len(&self) -> usize {
-        5
-    }
-}
-
-impl<A: View, B: View, C: View, D: View, E: View, F: View> ViewTuple for (A, B, C, D, E, F) {
-    fn foreach_view<FN: FnMut(&dyn View)>(&self, f: &mut FN) {
-        f(&self.0);
-        f(&self.1);
-        f(&self.2);
-        f(&self.3);
-        f(&self.4);
-        f(&self.5);
-    }
-    fn len(&self) -> usize {
-        6
-    }
-}
-
-impl<A: View, B: View, C: View, D: View, E: View, F: View, G: View> ViewTuple
-    for (A, B, C, D, E, F, G)
-{
-    fn foreach_view<FN: FnMut(&dyn View)>(&self, f: &mut FN) {
-        f(&self.0);
-        f(&self.1);
-        f(&self.2);
-        f(&self.3);
-        f(&self.4);
-        f(&self.5);
-        f(&self.6);
-    }
-    fn len(&self) -> usize {
-        7
-    }
-}
-
-impl<A: View, B: View, C: View, D: View, E: View, F: View, G: View, H: View> ViewTuple
-    for (A, B, C, D, E, F, G, H)
-{
-    fn foreach_view<FN: FnMut(&dyn View)>(&self, f: &mut FN) {
-        f(&self.0);
-        f(&self.1);
-        f(&self.2);
-        f(&self.3);
-        f(&self.4);
-        f(&self.5);
-        f(&self.6);
-        f(&self.7);
-    }
-    fn len(&self) -> usize {
-        8
-    }
-}
 
 /// Horizontal stack of up to 8 Views in a tuple. Each item can be a different view type.
 pub fn hstack<VT: ViewTuple + 'static>(children: VT) -> impl View {
