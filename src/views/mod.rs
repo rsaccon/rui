@@ -6,6 +6,8 @@ mod button;
 pub use button::*;
 mod canvas;
 pub use canvas::*;
+mod canvas3d;
+pub use canvas3d::*;
 mod command;
 pub use command::*;
 mod drag;

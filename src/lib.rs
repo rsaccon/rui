@@ -117,7 +117,9 @@ async fn setup(window: &Window) -> Setup {
         .request_device(
             &wgpu::DeviceDescriptor {
                 label: None,
-                features: wgpu::Features::default(),
+                // features: wgpu::Features::default(),
+                // TODO: proper features detection and handling
+                features: wgpu::Features::POLYGON_MODE_LINE, // for 3d
                 limits: wgpu::Limits::default(),
             },
             trace_dir.ok().as_ref().map(std::path::Path::new),
@@ -415,6 +417,7 @@ pub fn rui(view: impl View) {
                     .texture
                     .create_view(&wgpu::TextureViewDescriptor::default());
 
+                // let depth_view = create_depth_buffer(&device, &config);
                 let desc = wgpu::RenderPassDescriptor {
                     label: None,
                     color_attachments: &[wgpu::RenderPassColorAttachment {
@@ -426,6 +429,14 @@ pub fn rui(view: impl View) {
                         },
                     }],
                     depth_stencil_attachment: None,
+                    // depth_stencil_attachment: Some(wgpu::RenderPassDepthStencilAttachment {
+                    //     view: &depth_view,
+                    //     depth_ops: Some(wgpu::Operations {
+                    //         load: wgpu::LoadOp::Load,
+                    //         store: true,
+                    //     }),
+                    //     stencil_ops: None,
+                    // }),
                 };
 
                 vger.encode(&device, &desc, &queue);
@@ -506,6 +517,28 @@ pub fn rui(view: impl View) {
             _ => (),
         }
     });
+}
+
+// To be used for 3d stuff
+fn create_depth_buffer(
+    device: &wgpu::Device,
+    surface_config: &wgpu::SurfaceConfiguration,
+) -> wgpu::TextureView {
+    let texture = device.create_texture(&wgpu::TextureDescriptor {
+        label: None,
+        size: wgpu::Extent3d {
+            width: surface_config.width,
+            height: surface_config.height,
+            depth_or_array_layers: 1,
+        },
+        mip_level_count: 1,
+        sample_count: 1,
+        dimension: wgpu::TextureDimension::D2,
+        format: DEPTH_FORMAT,
+        usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
+    });
+
+    texture.create_view(&wgpu::TextureViewDescriptor::default())
 }
 
 #[cfg(test)]
