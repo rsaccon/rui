@@ -9,8 +9,8 @@ struct TextEditorState {
 impl TextEditorState {
     fn fwd(&mut self, len: usize) {
         self.cursor += 1;
-        if self.cursor >= len {
-            self.cursor = len - 1;
+        if self.cursor > len {
+            self.cursor = len;
         }
     }
     fn back(&mut self) {
@@ -142,23 +142,30 @@ pub fn text_editor(text: impl Binding<String>) -> impl View {
                 let font_size = 18;
                 let break_width = Some(rect.width());
 
-                let rects = vger.glyph_positions(text.get(cx), font_size, break_width);
-                let lines = vger.line_metrics(text.get(cx), font_size, break_width);
-
                 vger.text(text.get(cx), font_size, TEXT_COLOR, break_width);
 
                 if has_focus {
+                    let rects = vger.glyph_positions(text.get(cx), font_size, break_width);
+                    let lines = vger.line_metrics(text.get(cx), font_size, break_width);
                     let glyph_rect_paint = vger.color_paint(vger::Color::MAGENTA);
-                    let r = rects[cursor];
+                    let p = if cursor == rects.len() {
+                        if let Some(r) = rects.last() {
+                            [r.origin.x + r.size.width, r.origin.y].into()
+                        } else {
+                            [0.0, -20.0].into()
+                        }
+                    } else {
+                        rects[cursor].origin
+                    };
                     vger.fill_rect(
-                        LocalRect::new(r.origin, [2.0, 20.0].into()),
+                        LocalRect::new(p, [2.0, 20.0].into()),
                         0.0,
                         glyph_rect_paint,
                     );
-                }
 
-                cx[state].glyph_rects = rects;
-                cx[state].lines = lines;
+                    cx[state].glyph_rects = rects;
+                    cx[state].lines = lines;
+                }
             })
             .key(move |cx, k, _| {
                 if has_focus {
