@@ -1,6 +1,6 @@
 use crate::*;
 use fj_math::{Aabb, Point};
-use vger::canvas3d::vertices::{Vertex, Vertices};
+use vger::vger3d::vertices::{Vertex, Vertices};
 
 /// Struct for `canvas3d`
 pub struct Canvas3d<F> {

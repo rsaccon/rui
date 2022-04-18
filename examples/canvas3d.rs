@@ -1,6 +1,6 @@
 use rui::*;
 use tao::keyboard::ModifiersState;
-use vger::canvas3d::vertices::{Vertex, Vertices};
+use vger::vger3d::vertices::{Vertex, Vertices};
 
 struct AppState {
     // mesh: Vertices,
