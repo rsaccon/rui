@@ -74,18 +74,7 @@ fn main() {
                 focus(move |has_focus| {
                     zstack((
                         canvas3d(|_, rect, vger| {
-                            vger.translate(rect.center() - LocalPoint::zero());
-
-                            let paint = vger.linear_gradient(
-                                [-100.0, -100.0],
-                                [100.0, 100.0],
-                                RED_HIGHLIGHT,
-                                AZURE_HIGHLIGHT,
-                                0.0,
-                            );
-
-                            let radius = 100.0;
-                            vger.fill_circle(LocalPoint::zero(), radius, paint);
+                            // TODO
                         })
                         .key(move |cx, key, mods| {
                             if has_focus {

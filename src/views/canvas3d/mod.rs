@@ -1,8 +1,11 @@
 use crate::*;
+use fj_math::{Aabb, Point};
 use vger::canvas3d::vertices::{Vertex, Vertices};
+
 /// Struct for `canvas3d`
 pub struct Canvas3d<F> {
     mesh: Vertices,
+    aabb: Aabb<3>,
     func: F,
 }
 
@@ -17,19 +20,21 @@ where
     fn draw(&self, id: ViewId, cx: &mut Context, vger: &mut VGER) {
         let rect = cx.layout.entry(id).or_default().rect;
 
-        vger.save();
-        (self.func)(cx, rect, vger);
-        vger.restore();
-
         // vger.save();
+        // (self.func)(cx, rect, vger);
+        // vger.restore();
+
+        vger.save();
         // vger.setup3d(rect);
         // let state = (self.func)(cx, rect, vger);
         // vger.transforms3d = state.transforms;
         // vger.processed_shape = Some(state.processed_shape);
-        // vger.restore();
+        //-vger.mesh = (self.func)(cx, rect, vger);
+        vger.restore();
     }
 
     fn layout(&self, id: ViewId, sz: LocalSize, cx: &mut Context, _vger: &mut VGER) -> LocalSize {
+        // TODO: viewport stuff
         cx.layout.insert(
             id,
             LayoutBox {
@@ -191,6 +196,10 @@ pub fn canvas3d<F: Fn(&mut Context, LocalRect, &mut VGER) + 'static>(
                 16, 17, 18, 19, 18, 17, 20, 21, 22, 23, 21, 20,
             ],
         ),
+        aabb: Aabb {
+            min: Point::from([-1.5, -1.0, 0.0]),
+            max: Point::from([1.5, 1.0, 1.0]),
+        },
         func: f,
     }
 }
