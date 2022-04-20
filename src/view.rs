@@ -33,11 +33,13 @@ pub trait View: private::Sealed + 'static {
     /// Returns the topmost view which the point intersects.
     fn hittest(
         &self,
-        id: ViewId,
-        pt: LocalPoint,
-        cx: &mut Context,
-        vger: &mut VGER,
-    ) -> Option<ViewId>;
+        _id: ViewId,
+        _pt: LocalPoint,
+        _cx: &mut Context,
+        _vger: &mut VGER,
+    ) -> Option<ViewId> {
+        None
+    }
 
     /// Accumulates information about menu bar commands.
     fn commands(&self, _id: ViewId, _cx: &mut Context, _cmds: &mut Vec<CommandInfo>) {}
@@ -56,5 +58,7 @@ pub trait View: private::Sealed + 'static {
     }
 
     /// For detecting spacers.
-    fn is_spacer(&self) -> bool { false }
+    fn is_spacer(&self) -> bool {
+        false
+    }
 }

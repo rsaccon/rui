@@ -11,7 +11,11 @@ pub trait ViewTuple {
     /// Returns the number of spacers in the ViewTuple
     fn spacer_count(&self) -> usize {
         let mut n = 0;
-        self.foreach_view(&mut |v| if v.is_spacer() { n += 1});
+        self.foreach_view(&mut |v| {
+            if v.is_spacer() {
+                n += 1
+            }
+        });
         n
     }
 }
@@ -29,6 +33,8 @@ macro_rules! impl_view_tuple {
         }
     }
 }
+
+pub const VIEW_TUPLE_MAX_ELEMENTS: usize = 10;
 
 impl_view_tuple!(1; V0; 0);
 impl_view_tuple!(2; V0, V1; 0, 1);
