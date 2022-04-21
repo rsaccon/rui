@@ -4,14 +4,12 @@ use vger::vger3d::vertices::{Vertex, Vertices};
 
 /// Struct for `mesh3d`
 pub struct Mesh3d<FnAabb, FnMesh> {
-    // func: F,
     func_aabb: FnAabb,
     func_mesh: FnMesh,
 }
 
 impl<FnAabb, FnMesh> View for Mesh3d<FnAabb, FnMesh>
 where
-    // F: Fn(&mut Context, LocalRect, &mut VGER) + 'static,
     FnAabb: Fn() -> Aabb<3> + 'static,
     FnMesh: Fn() -> Vertices + 'static,
 {
@@ -19,7 +17,7 @@ where
         println!("canvas");
     }
 
-    fn draw(&self, id: ViewId, cx: &mut Context, vger: &mut VGER) {
+    fn draw(&self, _id: ViewId, _cx: &mut Context, vger: &mut VGER) {
         // let rect = cx.layout.entry(id).or_default().rect;
 
         vger.aabb = (self.func_aabb)();
