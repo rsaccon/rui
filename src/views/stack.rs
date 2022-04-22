@@ -13,7 +13,6 @@ pub enum StackSize {
 
 /// 1-D stack layout to make the algorithm clear.
 pub fn stack_layout(total: f32, sizes: &[StackSize], intervals: &mut [(f32, f32)]) {
-
     assert_eq!(sizes.len(), intervals.len());
 
     // Count the number of spacers and total of fixed sizes.
@@ -63,7 +62,7 @@ impl<VT: ViewTuple + 'static> View for Stack<VT> {
         println!("}}");
     }
 
-    fn process(&self, event: &Event, id: ViewId, cx: &mut Context, vger: &mut VGER) {
+    fn process(&self, event: &Event, id: ViewId, cx: &mut Context, vger: &mut Vger) {
         let mut c = 0;
         self.children.foreach_view(&mut |child| {
             let child_id = id.child(&c);
@@ -77,7 +76,7 @@ impl<VT: ViewTuple + 'static> View for Stack<VT> {
         })
     }
 
-    fn draw(&self, id: ViewId, cx: &mut Context, vger: &mut VGER) {
+    fn draw(&self, id: ViewId, cx: &mut Context, vger: &mut Vger) {
         let mut c = 0;
         self.children.foreach_view(&mut |child| {
             let child_id = id.child(&c);
@@ -105,7 +104,7 @@ impl<VT: ViewTuple + 'static> View for Stack<VT> {
         })
     }
 
-    fn layout(&self, id: ViewId, sz: LocalSize, cx: &mut Context, vger: &mut VGER) -> LocalSize {
+    fn layout(&self, id: ViewId, sz: LocalSize, cx: &mut Context, vger: &mut Vger) -> LocalSize {
         let n = self.children.len() as f32;
 
         match self.orientation {
@@ -232,7 +231,7 @@ impl<VT: ViewTuple + 'static> View for Stack<VT> {
         id: ViewId,
         pt: LocalPoint,
         cx: &mut Context,
-        vger: &mut VGER,
+        vger: &mut Vger,
     ) -> Option<ViewId> {
         let mut c = 0;
         let mut hit = None;
@@ -298,7 +297,7 @@ impl<VT: ViewTuple> Stack<VT> {
         id: ViewId,
         proposed_child_size: LocalSize,
         cx: &mut Context,
-        vger: &mut VGER,
+        vger: &mut Vger,
         child_sizes: &mut [LocalSize],
     ) {
         let mut c: i32 = 0;
@@ -314,7 +313,7 @@ impl<VT: ViewTuple> Stack<VT> {
         id: ViewId,
         proposed_child_size: LocalSize,
         cx: &mut Context,
-        vger: &mut VGER,
+        vger: &mut Vger,
         child_sizes: &mut [Option<LocalSize>],
     ) {
         let mut c: i32 = 0;

@@ -254,7 +254,7 @@ pub fn rui(view: impl View) {
     let texture_format3d = surface
         .get_preferred_format(&adapter)
         .expect("Error determining preferred color format");
-    let mut vger = VGER::new(
+    let mut vger = Vger::new(
         &device,
         wgpu::TextureFormat::Bgra8UnormSrgb,
         // texture_format3d,

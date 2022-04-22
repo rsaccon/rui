@@ -17,7 +17,7 @@ where
         println!("canvas");
     }
 
-    fn draw(&self, _id: ViewId, _cx: &mut Context, vger: &mut VGER) {
+    fn draw(&self, _id: ViewId, _cx: &mut Context, vger: &mut Vger) {
         // let rect = cx.layout.entry(id).or_default().rect;
 
         vger.aabb = (self.func_aabb)();
@@ -28,7 +28,7 @@ where
         // vger.restore();
     }
 
-    fn layout(&self, id: ViewId, sz: LocalSize, cx: &mut Context, _vger: &mut VGER) -> LocalSize {
+    fn layout(&self, id: ViewId, sz: LocalSize, cx: &mut Context, _vger: &mut Vger) -> LocalSize {
         println!("Layout LocalSize {:?}", sz);
         // ???? vger.setup3d(rect); ????
         cx.layout.insert(
@@ -46,7 +46,7 @@ where
         id: ViewId,
         pt: LocalPoint,
         cx: &mut Context,
-        _vger: &mut VGER,
+        _vger: &mut Vger,
     ) -> Option<ViewId> {
         let rect = cx.layout.entry(id).or_default().rect;
 
