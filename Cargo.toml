@@ -26,5 +26,6 @@ accesskit = "0.3.0"
 lazy_static = "1.4.0"
 
 vger = { path = "../vger-rs" } # TEMPORAY
+nalgebra    = "0.30.0" # TODO: use euclid
 fj-math = { path = "../fornjot/crates/fj-math" } # TODO: use euclid
 

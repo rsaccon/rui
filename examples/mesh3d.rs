@@ -1,18 +1,12 @@
+use euclid::default::{Box3D, Point3D};
 use fj_math::{Aabb, Point};
 use rui::*;
 use tao::keyboard::ModifiersState;
-use vger::vger3d::vertices::{Index, Vertex, Vertices};
+use vger::vger3d::{
+    vertices::{Index, Vertex, Vertices},
+    Rotate, Translate,
+};
 
-struct Translate {
-    x: f64,
-    y: f64,
-    z: f64,
-}
-
-struct Rotate {
-    axis_x_angle: f64,
-    axis_y_angle: f64,
-}
 struct AppState {
     // mesh: Vertices,
     translate: Translate,
@@ -21,19 +15,19 @@ struct AppState {
 
 impl AppState {
     fn left(&mut self) {
-        // self.translate.x = 0.05;
+        self.translate.x = 0.05;
         // self.rotate.axis_y_angle = 0.3;
     }
     fn right(&mut self) {
-        // self.translate.x = -0.05;
+        self.translate.x = -0.05;
         // self.rotate.axis_y_angle = -0.3;
     }
     fn up(&mut self) {
-        // self.translate.y = -0.05;
+        self.translate.y = -0.05;
         // self.rotate.axis_x_angle = 0.3;
     }
     fn down(&mut self) {
-        // self.translate.y = 0.05;
+        self.translate.y = 0.05;
         // self.rotate.axis_x_angle = -0.3;
     }
     fn key(&mut self, key: &KeyPress, _mods: &ModifiersState) {
@@ -96,13 +90,6 @@ fn main() {
                 focus(move |has_focus| {
                     zstack((
                         mesh3d(
-                            || {
-                                // TODO: generate it form mesh
-                                Aabb {
-                                    min: Point::from([-1.5, -1.0, 0.0]),
-                                    max: Point::from([1.5, 1.0, 1.0]),
-                                }
-                            },
                             || {
                                 // TODO: read form external file
                                 Vertices::new(
@@ -234,6 +221,21 @@ fn main() {
                                         23, 21, 20,
                                     ],
                                 )
+                            },
+                            || {
+                                Box3D::new(
+                                    Point3D::new(-1.5, -1.0, 0.0),
+                                    Point3D::new(1.5, 1.0, 1.0),
+                                )
+                            },
+                            move |cx| Rotate {
+                                axis_x_angle: cx[state].rotate.axis_x_angle,
+                                axis_y_angle: cx[state].rotate.axis_y_angle,
+                            },
+                            move |cx| Translate {
+                                x: cx[state].translate.x,
+                                y: cx[state].translate.y,
+                                z: cx[state].translate.z,
                             },
                         )
                         .key(move |cx, key, mods| {
