@@ -251,14 +251,7 @@ pub fn rui(view: impl View) {
 
     *GLOBAL_EVENT_LOOP_PROXY.lock().unwrap() = Some(event_loop.create_proxy());
 
-    let texture_format3d = surface
-        .get_preferred_format(&adapter)
-        .expect("Error determining preferred color format");
-    let mut vger = Vger::new(
-        &device,
-        wgpu::TextureFormat::Bgra8UnormSrgb,
-        // texture_format3d,
-    );
+    let mut vger = Vger::new(&device, wgpu::TextureFormat::Bgra8UnormSrgb);
     let mut cx = Context::new(Some(window));
     let mut mouse_position = LocalPoint::zero();
 

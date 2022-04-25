@@ -1,14 +1,12 @@
 use euclid::default::{Box3D, Point3D};
-use fj_math::{Aabb, Point};
 use rui::*;
 use tao::keyboard::ModifiersState;
 use vger::vger3d::{
-    vertices::{Index, Vertex, Vertices},
+    vertices::{Vertex, Vertices},
     Rotate, Translate,
 };
 
 struct AppState {
-    // mesh: Vertices,
     translate: Translate,
     rotate: Rotate,
 }
@@ -44,7 +42,6 @@ impl AppState {
 fn main() {
     rui(state(
         || AppState {
-            // mesh: TODO
             translate: Translate {
                 x: 0.0,
                 y: 0.0,
@@ -88,8 +85,8 @@ fn main() {
                             // cx[state].translate.x = -delta.x as f64;
                             // cx[state].translate.y = -delta.y as f64;
 
-                            cx[state].rotate.axis_x_angle = -delta.x as f64;
-                            cx[state].rotate.axis_y_angle = -delta.y as f64;
+                            cx[state].rotate.axis_x_angle = delta.y as f64 * 0.01;
+                            cx[state].rotate.axis_y_angle = -delta.x as f64 * 0.01;
                         }),
                         text("Canvas 2d"),
                     ))
