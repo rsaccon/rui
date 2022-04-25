@@ -1,5 +1,5 @@
 use crate::*;
-use euclid::default::Box3D;
+use euclid::default::{Box3D, Point3D};
 use nalgebra as na;
 use vger::vger3d::{
     camera::Camera,
@@ -25,40 +25,47 @@ where
     FnTranslate: Fn(&mut Context) -> Translate + 'static,
 {
     fn print(&self, _id: ViewId, _cx: &mut Context) {
-        println!("canvas");
+        println!("mesh3d");
     }
 
-    fn draw(&self, _id: ViewId, cx: &mut Context, vger: &mut Vger) {
-        // let rect = cx.layout.entry(id).or_default().rect;
+    fn draw(&self, id: ViewId, cx: &mut Context, vger: &mut Vger) {
+        let rect = cx.layout.entry(id).or_default().rect;
 
-        vger.mesh = (self.func_mesh)();
+        let rotate = (self.func_rotate)(cx);
+        let translate = (self.func_translate)(cx);
+        if let Some(camera) = cx.cameras.get_mut(&id) {
+            println!("draw mesh3d");
 
-        // let camera = Camera::new(&vger.aabb);
-        // vger.transforms =  (self.update_transforms)();
-        // vger.save();
-        // (self.func)(cx, rect, vger);
-        // vger.restore();
+            let rot_x = na::Rotation3::from_axis_angle(&na::Vector::x_axis(), rotate.axis_x_angle);
+            let rot_y = na::Rotation3::from_axis_angle(&na::Vector::y_axis(), rotate.axis_y_angle);
+            camera.rotation = rot_x * rot_y * camera.rotation;
+            camera.translation.x += translate.x;
+            camera.translation.y += translate.y;
+            camera.translation.z += translate.z;
+
+            let aspect_ratio = rect.width() / rect.height();
+            vger.transforms3d = Transforms {
+                transform: Transform::for_vertices(&camera, aspect_ratio.into()),
+                transform_normals: Transform::for_normals(&camera),
+            };
+        } else {
+            let aabb = (self.func_aabb)();
+            let camera = Camera::new(&aabb);
+
+            println!("draw mesh3d FIRST");
+            vger.mesh = (self.func_mesh)();
+
+            let aspect_ratio = rect.width() / rect.height();
+            vger.transforms3d = Transforms {
+                transform: Transform::for_vertices(&camera, aspect_ratio.into()),
+                transform_normals: Transform::for_normals(&camera),
+            };
+
+            cx.cameras.insert(id, camera);
+        };
     }
 
     fn layout(&self, id: ViewId, sz: LocalSize, cx: &mut Context, vger: &mut Vger) -> LocalSize {
-        vger.aabb = (self.func_aabb)();
-        vger.camera = Camera::new(&vger.aabb); //(self.func_aabb)();
-        let rotate = (self.func_rotate)(cx);
-        let translate = (self.func_translate)(cx);
-
-        let rot_x = na::Rotation3::from_axis_angle(&na::Vector::x_axis(), rotate.axis_x_angle);
-        let rot_y = na::Rotation3::from_axis_angle(&na::Vector::y_axis(), rotate.axis_y_angle);
-        vger.camera.rotation = rot_x * rot_y * vger.camera.rotation;
-        vger.camera.translation.x += translate.x;
-        vger.camera.translation.y += translate.y;
-        vger.camera.translation.z += translate.z;
-
-        let aspect_ratio = sz.width / sz.height;
-        vger.transforms3d = Transforms {
-            transform: Transform::for_vertices(&vger.camera, aspect_ratio.into()),
-            transform_normals: Transform::for_normals(&vger.camera),
-        };
-
         cx.layout.insert(
             id,
             LayoutBox {
@@ -86,7 +93,7 @@ where
     }
 }
 
-/// Canvas for GPU drawing with Vger. See https://github.com/audulus/vger-rs.
+/// Rendering 3d mesh
 pub fn mesh3d<FnMesh, FnAabb, FnRotate, FnTranslate>(
     fn_mesh: FnMesh,
     fn_aabb: FnAabb,
@@ -99,11 +106,16 @@ where
     FnRotate: Fn(&mut Context) -> Rotate + 'static,
     FnTranslate: Fn(&mut Context) -> Translate + 'static,
 {
+    // println!("instatiate mesh view");
+    // let aabb = Box3D::new(Point3D::zero(), Point3D::zero());
+    // let camera = Camera::new(&aabb);
     Mesh3d {
         func_mesh: fn_mesh,
         func_aabb: fn_aabb,
         func_rotate: fn_rotate,
         func_translate: fn_translate,
+        // aabb,
+        // camera,
     }
 }
 

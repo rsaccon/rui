@@ -5,6 +5,7 @@ use std::any::TypeId;
 use std::collections::HashMap;
 use std::ops;
 use tao::event::MouseButton;
+use vger::vger3d::camera::Camera;
 
 pub type LocalSpace = vger::defs::LocalSpace;
 pub type WorldSpace = vger::defs::WorldSpace;
@@ -80,6 +81,10 @@ pub struct Context {
 
     /// Values indexed by type.
     pub(crate) env: EnvMap,
+
+    // 3d stuff
+    /// Camera information for all 3d views.
+    pub(crate) cameras: HashMap<ViewId, Camera>,
 }
 
 impl Context {
@@ -99,6 +104,8 @@ impl Context {
             dirty: false,
             enable_dirty: true,
             env: HashMap::new(),
+            //
+            cameras: HashMap::new(),
         }
     }
 
