@@ -106,16 +106,11 @@ where
     FnRotate: Fn(&mut Context) -> Rotate + 'static,
     FnTranslate: Fn(&mut Context) -> Translate + 'static,
 {
-    // println!("instatiate mesh view");
-    // let aabb = Box3D::new(Point3D::zero(), Point3D::zero());
-    // let camera = Camera::new(&aabb);
     Mesh3d {
         func_mesh: fn_mesh,
         func_aabb: fn_aabb,
         func_rotate: fn_rotate,
         func_translate: fn_translate,
-        // aabb,
-        // camera,
     }
 }
 

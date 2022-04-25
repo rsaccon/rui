@@ -15,20 +15,20 @@ struct AppState {
 
 impl AppState {
     fn left(&mut self) {
-        self.translate.x = 0.05;
-        // self.rotate.axis_y_angle = 0.3;
+        // self.translate.x = 0.05;
+        self.rotate.axis_y_angle = 0.3;
     }
     fn right(&mut self) {
-        self.translate.x = -0.05;
-        // self.rotate.axis_y_angle = -0.3;
+        // self.translate.x = -0.05;
+        self.rotate.axis_y_angle = -0.3;
     }
     fn up(&mut self) {
-        self.translate.y = -0.05;
-        // self.rotate.axis_x_angle = 0.3;
+        // self.translate.y = -0.05;
+        self.rotate.axis_x_angle = 0.3;
     }
     fn down(&mut self) {
-        self.translate.y = 0.05;
-        // self.rotate.axis_x_angle = -0.3;
+        // self.translate.y = 0.05;
+        self.rotate.axis_x_angle = -0.3;
     }
     fn key(&mut self, key: &KeyPress, _mods: &ModifiersState) {
         match key {
@@ -80,9 +80,16 @@ fn main() {
                         })
                         .key(move |cx, key, mods| {
                             if has_focus {
-                                println!("key canvas 2d");
+                                // println!("key canvas 2d");
                                 cx[state].key(&key, &mods);
                             }
+                        })
+                        .drag(move |cx, delta, _gesture_state, _, _| {
+                            // cx[state].translate.x = -delta.x as f64;
+                            // cx[state].translate.y = -delta.y as f64;
+
+                            cx[state].rotate.axis_x_angle = -delta.x as f64;
+                            cx[state].rotate.axis_y_angle = -delta.y as f64;
                         }),
                         text("Canvas 2d"),
                     ))
