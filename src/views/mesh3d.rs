@@ -1,12 +1,12 @@
 use crate::*;
-use euclid::default::{Box3D, Point3D};
-use nalgebra as na;
+use euclid::{
+    default::{Box3D, Rotation3D},
+    Angle,
+};
+// use nalgebra as na;
 use vger::vger3d::{
-    camera::Camera,
-    transform::Transform,
-    uniforms::Transforms,
-    vertices::{Vertex, Vertices},
-    Rotate, Translate,
+    camera::Camera, transform::Transform, uniforms::Transforms, vertices::Vertices, Rotate,
+    Translate,
 };
 
 /// Struct for `mesh3d`
@@ -36,9 +36,14 @@ where
         if let Some(camera) = cx.cameras.get_mut(&id) {
             println!("draw mesh3d");
 
-            let rot_x = na::Rotation3::from_axis_angle(&na::Vector::x_axis(), rotate.axis_x_angle);
-            let rot_y = na::Rotation3::from_axis_angle(&na::Vector::y_axis(), rotate.axis_y_angle);
-            camera.rotation = rot_x * rot_y * camera.rotation;
+            // let rot_x = na::Rotation3::from_axis_angle(&na::Vector::x_axis(), rotate.axis_x_angle);
+            // let rot_y = na::Rotation3::from_axis_angle(&na::Vector::y_axis(), rotate.axis_y_angle);
+            // camera.rotation = rot_x * rot_y * camera.rotation;
+
+            let rot_x = Rotation3D::around_x(Angle::radians(rotate.axis_x_angle));
+            let rot_y = Rotation3D::around_y(Angle::radians(rotate.axis_y_angle));
+            camera.rotation = rot_x.then(&rot_y).to_transform().then(&camera.rotation);
+
             camera.translation.x += translate.x;
             camera.translation.y += translate.y;
             camera.translation.z += translate.z;
